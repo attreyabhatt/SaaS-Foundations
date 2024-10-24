@@ -16,3 +16,6 @@ def home_page_view(request, *args, **kwargs):
 
     PageVisit.objects.create(path=request.path)
     return render(request,"home.html",context)
+
+def about_page_view(request, *args, **kwargs):
+    pass
