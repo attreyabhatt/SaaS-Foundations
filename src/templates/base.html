@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>
-        {% block head_title %} 
-        SaaS 
-        {% endblock head_title %}
-        </title>
+        <title>{% block head_title %}SaaS {% endblock head_title %}</title>
+        {% include 'base/css.html'%}
     </head>
     <body>
+        {% include 'nav/navbar.html' %}
         <h1>{{ page_title }}</h1>
         {% block content %}{% endblock content%}
+
+    {% include 'base/js.html'%}
     </body>
+    
 </html>
