@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     # my-apps
     'commando',
     'visits',
+    'profiles',
 
     #third-party apps
     #all-auth
@@ -181,7 +182,9 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[CFE]"
 
 SOCIALACCOUNT_PROVIDERS = {
-    
+    "github": {
+        "VERIFIED_EMAIL": True,
+    }
 }
 
 ALLAUTH_UI_THEME = "light"
