@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'commando',
     'visits',
     'profiles',
+    'subscriptions',
 
     #third-party apps
     #all-auth
