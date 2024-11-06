@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'visits',
     'profiles',
     'subscriptions',
+    'customers',
 
     #third-party apps
     #all-auth
