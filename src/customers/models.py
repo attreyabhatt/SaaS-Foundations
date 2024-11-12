@@ -43,6 +43,10 @@ class Customer(models.Model):
 
         super().save(*args, **kwargs)
         #anything after super is post save it will not update though
+
+
+# Flow -> User signs up ->allauth_user_signed_up_handler is triggered which creates customer on stripe -> When email confirmed
+# -> allauth_email_confirmed_handler -> Triggers the overriden save func which finally saves the stripe id from stripe
     
 def allauth_user_signed_up_handler(request, user, *args, **kwargs):
     email = user.email
@@ -64,8 +68,8 @@ def allauth_email_confirmed_handler(request, email_address, *args, **kwargs):
     # qs.update(init_email_confirmed=True)
     for obj in qs:
         obj.init_email_confirmed=True
-        # send the signal
-        obj.save()
+        # send the signal 
+        obj.save() # if the email is confirmed then the save method (above) is triggered 
 
 
 allauth_email_confirmed.connect(allauth_email_confirmed_handler)
