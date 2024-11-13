@@ -22,6 +22,8 @@ from subscriptions import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pricing/', views.subscription_price_view, name='pricing'),
+    path('pricing/<str:interval>/', views.subscription_price_view,name='pricing_interval'),
+
     # path('login/', auth_views.login_view),
     # path('register/', auth_views.register_view),
     path('', home_view, name='home'),
