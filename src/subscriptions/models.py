@@ -20,6 +20,7 @@ class Subscription(models.Model):
     Subscription Plan = Stripe Product
     """
     name = models.CharField(max_length=120)
+    subtitle = models.TextField(blank=True,null=True)
     active = models.BooleanField(default=True)
     groups = models.ManyToManyField(Group)
     permissions =  models.ManyToManyField(Permission, limit_choices_to={
@@ -31,6 +32,7 @@ class Subscription(models.Model):
     featured = models.BooleanField(default=True,help_text='Featured on Django Pricing Page')
     updated = models.DateTimeField(auto_now=True)
     timestamp  = models.DateTimeField(auto_now_add=True)
+    features = models.TextField(help_text="Features for pricing, seperated by new line", blank=True, null=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -38,6 +40,11 @@ class Subscription(models.Model):
     class Meta:
         permissions = SUBSCRIPTION_PERMISSIONS
         ordering = ['order','featured','-updated']
+
+    def get_features_as_list(self):
+        if not self.features:
+            return []
+        return [x.strip() for x in self.features.split("\n")]
 
     def save(self, *args, **kwargs):
 
@@ -67,7 +74,7 @@ class SubscriptionPrice(models.Model):
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
     interval = models.CharField(max_length=120,
                                 default=IntervalChoices.MONTHLY,
-                                choices=IntervalChoices.choices)
+                                choices=IntervalChoices.choices) # get_<field_name>_display
     price = models.DecimalField(max_digits=10,decimal_places=2,default=99.99)
     order = models.IntegerField(default=-1,help_text='Ordering on Django Pricing Page')
     featured = models.BooleanField(default=True,help_text='Featured on Django Pricing Page')
@@ -77,6 +84,24 @@ class SubscriptionPrice(models.Model):
     class Meta:
         ordering = ['subscription__order','order','featured','-updated']
 
+    @property
+    def display_features_list(self):
+        if not self.subscription:
+            return []
+        return self.subscription.get_features_as_list()
+
+    @property
+    def display_sub_name(self):
+        if not self.subscription.name:
+            return "Plan"
+        return self.subscription.name
+
+    @property
+    def display_sub_subtitle(self):
+        if not self.subscription:
+            return "Plan"
+        return self.subscription.subtitle
+        
     @property
     def product_stripe_id(self):
         if not self.subscription:
@@ -89,6 +114,7 @@ class SubscriptionPrice(models.Model):
         remove decimal places
         """
         return int(self.price * 100)
+
     @property
     def stripe_currency(self):
         return "usd"
