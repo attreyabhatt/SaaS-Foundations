@@ -8,7 +8,7 @@ LOGIN_URL = settings.LOGIN_URL
 
 def home_view(request, *args, **kwargs):
     if request.user.is_authenticated:
-        print(request.user)
+        print(request.user.usersubscription.active)
     return about_view(request,*args,**kwargs)
 
 def about_view(request, *args, **kwargs):
