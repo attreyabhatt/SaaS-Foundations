@@ -144,6 +144,16 @@ class SubscriptionPrice(models.Model):
             ).exclude(id=self.id)
             qs.update(featured=False)
 
+class SubscriptionStatus(models.TextChoices):
+        ACTIVE = 'active', 'Active'
+        TRIALING = 'trialing', 'Trialing'
+        INCOMPLETE = 'incomplete', 'Incomplete'
+        INCOMPLETE_EXPIRED = 'incomplete_expired', 'Incomplete Expired'
+        PAST_DUE = 'past_due', 'Past Due'
+        CANCELED = 'canceled', 'Canceled'
+        UNPAID = 'unpaid', 'Unpaid'
+        PAUSED = 'paused', 'Paused'
+
 class UserSubscription(models.Model):
     # cascade - when the user is deleted their Subscriptions (UserSubscriptions) are deleted as well
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -159,7 +169,8 @@ class UserSubscription(models.Model):
     current_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     current_period_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     cancel_at_period_end = models.BooleanField(default=False)
-    
+        
+    status = models.CharField(max_length=20, choices=SubscriptionStatus.choices, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -180,6 +191,8 @@ class UserSubscription(models.Model):
             ):
             self.original_period_start = self.current_period_start
         super().save(*args, **kwargs)
+
+
 
 def user_sub_post_save(sender, instance, *args, **kwargs):
     user_sub_instance = instance
