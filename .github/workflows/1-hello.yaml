@@ -2,9 +2,15 @@ name: 1 - Hello World Github actions
 
 on:
   workflow_dispatch:
-  push: #git push
-    branch:
-      - main
+
+  # schedule:
+  #   - cron: '30 15 * * *'
+  # crontab.guru - above runs at 15:30 every day
+
+  # below runs every time git push
+  # push: #git push
+  #   branch:
+  #     - main
 
 jobs:
   hello:
